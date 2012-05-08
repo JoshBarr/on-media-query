@@ -1,4 +1,4 @@
-big-bad-git-repo
-================
+Javascript Media Query Plugin
+===============================
 
-Code experiments and cool stuff.
+A neat way to trigger JS when media queries change.
