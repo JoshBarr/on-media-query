@@ -14,8 +14,9 @@ var MQ = (function(mq){
 	
 	mq.init = function ( query_array ) {
 
+		 // Container for all callbacks registered with the plugin
 		this.callbacks = new Array();
-		this.context = '';
+		this.context = ''; //current active query
 
 		if(typeof(query_array) !== 'undefined' ) {
 			for (i = 0; i < query_array.length; i++) {
@@ -23,20 +24,37 @@ var MQ = (function(mq){
 			}
 		}
 
+		// Add a listener to the window.resize event, pass mq/self as the scope.
 		this.addEvent(window, 'resize', 'listenForChange', mq);
+
+		// Figure out which query is active on load.
 		this.listenForChange();
 	}
 
 	mq.listenForChange = function() {
-		var size;
+		var body_after;
+
+		// Get the value of body:after from the element style.
+		body_after = window.getComputedStyle(document.body,':after').getPropertyValue('content');
+
+		// Characters allowed are A-Z, a-z, -. Should we allow numbers too?
 		
-		size = window.getComputedStyle(document.body,':after').getPropertyValue('content');
-		size = size.replace(/[^A-Za-z\s\-]+/g, '');
-		if(size !== this.context) {
-			this.triggerCallbacks(size);
+		body_after = body_after.replace(/['"]/g, '');
+		if(body_after !== this.context) {
+			this.triggerCallbacks(body_after);
 		}
-		this.context = size;
+		this.context = body_after;
 	}
+
+	// Attach a new query to test.
+	// [query_object] = {
+	//						context 'some_media_query',
+	//						callback: function() {
+	// 							//something awesome
+	//						}
+	//					}
+	//
+	// Returns a reference to the query_object
 
 	mq.addQuery = function( query_object ) {
 		if (query_object == null || query_object == undefined) return;
@@ -45,6 +63,7 @@ var MQ = (function(mq){
 		return this.callbacks[ this.callbacks.length - 1];
 	};
 
+	// Remove a query_object by reference.
 	mq.removeQuery = function( query_object ) {
 		if (query_object == null || query_object == undefined) return;
 
@@ -55,6 +74,8 @@ var MQ = (function(mq){
 	    }
 	}
 
+	// Loop through the stored callbacks and execute
+	// the ones that are bound to the current context.
 	mq.triggerCallbacks = function(size) {
 		var i, callback_function;
 
@@ -66,17 +87,22 @@ var MQ = (function(mq){
 		}
 	}
 
+	// Swiss Army Knife event binding, in lieu of jQuery.
 	mq.addEvent = function(elem, type, eventHandle, eventContext) {
 	    if (elem == null || elem == undefined) return;
+	    // If the browser supports event listeners, use them.
 	    if ( elem.addEventListener ) {
 	        elem.addEventListener( type, function() { eventContext[eventHandle]() }, false );
 	    } else if ( elem.attachEvent ) {
 	        elem.attachEvent( "on" + type, function() {  eventContext[eventHandle]() } );
+	        
+	    // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
 	    } else {
 	        elem["on"+type]=function() {  eventContext[eventHandle]() };
 	    }
 	}
 
+	// Expose the functions.
 	return mq;
 
 }(MQ || {}));
