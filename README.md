@@ -18,7 +18,7 @@ How to use it
 -------------------------------
 Define a set of body:after content strings in your stylesheet
 that correspond to the media queries you wish to test for:
-
+```css
 <style>
 
 body:after {
@@ -39,12 +39,12 @@ body:after {
 }
 
 </style>
-
+```
 
 2. JS
 -------------------------------
 Define the queries you want to test for.. and what to do if they're TRUE
-
+```javascript
 <script type="text/javascript" src="js/onmediaquery.min.js"></script>
 <script>
 
@@ -75,7 +75,7 @@ var queries = [
 MQ.init(queries);
 
 </script>
-
+```
 
 3. Adding queries
 -------------------------------
@@ -83,7 +83,7 @@ As well as passing an array of objects when you initialise the
 plugin, you can add extra callbacks at any time. This is especially
 handy if you've got multiple JS files across the site that need to
 test whether a query is true.
-
+```Javascript
 <script>
 
 var my_query = MQ.addQuery({
@@ -94,27 +94,22 @@ var my_query = MQ.addQuery({
 });
 
 </script>
-
+```
 
 4. Removing queries
 -------------------------------
 Remove a query by passing in a reference to it:
-
+```Javascript
 MQ.removeQuery( my_query );
+```
 
 
-
-5. Marvel at your own 1337-ness.
+5. Marvel at your 1337-ness.
 -------------------------------
 Enjoy responsive javascript with a friend today.
 
 
-
-===============================
-Josh Barr
-Designer
-
-Springload
+Josh Barr | Designer | Springload
 www.springload.co.nz
 
 
