@@ -1,0 +1,129 @@
+
+/* ---------------------------------------------------------------------- 
+Typography::Fonts
+---------------------------------------------------------------------- */
+
+body {
+    font-family: 'Lucida Grande', 'Lucida Sans', arial, helvetica, sans-serif;
+ 
+    }
+/* ---------------------------------------------------------------------- 
+Typography::Common::Styles
+---------------------------------------------------------------------- */
+h1 {
+    font-weight: bold;
+    font-size: 1.85em;
+    line-height:1.0em;
+    } 
+  
+h2, h3 {
+
+    line-height:1.0em;
+    }   
+      
+body {
+	background: #F8F7F5;
+	}
+div.nav {
+    font-size: 15px;
+    }	
+
+/* ---------------------------------------------------------------------- 
+Mobile:: Navigation Styles
+---------------------------------------------------------------------- */
+
+body {
+    margin: 0;
+    padding: 0;
+    line-height:1.6em;
+    }
+
+ul {
+    margin: 0;
+}
+    
+.title {
+    line-height: 1em;
+    margin-bottom: 0.5em;
+    color: #ABC469;
+    font-size: 1.8em;
+    }
+    
+div#wrapper {
+max-width: 700px;
+width: 90%;
+margin: 0 auto;
+padding: 0 5%;
+}
+
+div#mobile_site_nav {
+    background: #333; 
+    width: 100%;
+    padding:0;
+    margin: 0;
+    z-index: 3000;
+    position: relative;
+   }
+
+
+div.nav ul {
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    }
+
+div.nav li {
+    display: inline-block;
+    padding: 0.6em 0.5em;
+    }
+    
+div.smaller li {
+    padding: 0.3em 0.5em;
+    }   
+
+a {
+    text-decoration:none;
+    }
+ 
+.content {
+    padding: 0.5em 2em;
+    -moz-border-radius: 5px 5px 5px 5px;
+     -webkit-border-radius: 5px 5px 5px 5px;
+     border-radius: 5px 5px 5px 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 0.5em;
+    background: rgba(0,125,255,0.05);
+    }   
+
+
+#orient {
+    background-color: #eee;
+    }
+    
+#match,
+#orient {
+    display: none;
+    }
+
+h1 {
+    border-top: solid 1px #ccc;
+    padding-top: 20px;
+    }
+ 
+
+@media screen and (min-width:940px) {
+
+    div#mobile_site_nav {
+        display: none;
+        }    
+}
+    
+@media screen and (max-width:480px) { 
+
+    body {
+        font-size: 0.8em;
+        }
+    }
+    
+}
