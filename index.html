@@ -55,7 +55,7 @@ body:after {
 	<h2 class='title'>onMediaQuery</h2>
 	<h3>A simple way to handle Media Queries with Javascript.</h3>
 	<p>
-		Chances are, you're going to want to execute some code based on media queries in your snazzy responsive layout. At Springload we've been doing this with the <code>window.matchMedia()</code> function with great results, but this has meant maintaining breakpoints in two places – once in our stylesheet and once in our JS.
+		Chances are, you're going to want to execute some code based on media queries in your snazzy responsive layout. At Springload we've been doing this with the <code>window.matchMedia()</code> function with great results, but this has meant maintaining breakpoints in two places &mdash; once in our stylesheet and once in our JS.
 	</p>
 	<p>
 		Clearly this isn't very DRY. Right now, that's not too much of a problem, but the bigger a project grows, the more chance there is for this duplicate information to get out of sync. Fortunately, there's a better way. 
@@ -154,13 +154,21 @@ MQ.removeQuery( my_query );
 	This weighs in at a whopping <strong>581 bytes</strong> minified and gzipped, well worth including in your next project.
 </p>
 
+<h3 id='ie_test'></h3>
+<p id='dump'></p>
+</div>
+</div>
+
 <!-- Scripts -->
 <script type="text/javascript" src="js/onmediaquery.min.js"></script>
 <script language='javascript'>
+var ie = document.getElementById('ie_test');
+
 queries = [
 	{
 		context: 'mobile',
 		callback: function() {
+			ie.innerHTML = 'mobile';
 			console.log('mobile callback woohoo!');
 		}
 	},
@@ -168,16 +176,17 @@ queries = [
 		context: 'skinny',
 		callback: function() {
 			console.log('skinny callback woohoo!');
+			ie.innerHTML = 'skinny';
 		}
 	},
 	{
 		context: 'wide-screen',
 		callback: function() {
 			console.log('widescreen callback woohoo!');
+			ie.innerHTML = 'desktop';
 		}
 	}
 ];
-
 
 MQ.init(queries);
 

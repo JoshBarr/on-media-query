@@ -25,7 +25,7 @@ var MQ = (function(mq){
         }
 
         // Add a listener to the window.resize event, pass mq/self as the scope.
-        this.addEvent(window, 'resize', 'listenForChange', mq);
+        this.addEvent(window, 'resize', mq.listenForChange, mq);
 
         // Figure out which query is active on load.
         this.listenForChange();
@@ -35,10 +35,13 @@ var MQ = (function(mq){
         var body_after;
 
         // Get the value of body:after from the element style.
-        body_after = window.getComputedStyle(document.body,':after').getPropertyValue('content');
+        if(!window.getComputedStyle) return;
 
-        // Characters allowed are A-Z, a-z, -. Should we allow numbers too?
-        
+        body_after = window.getComputedStyle(document.body,':after').getPropertyValue('content');
+     
+        // No support for css :after? return and avoid errors;
+        if(body_after == null) return;
+
         body_after = body_after.replace(/['"]/g, '');
         if(body_after !== this.context) {
             this.triggerCallbacks(body_after);
@@ -92,13 +95,13 @@ var MQ = (function(mq){
         if (elem == null || elem == undefined) return;
         // If the browser supports event listeners, use them.
         if ( elem.addEventListener ) {
-            elem.addEventListener( type, function() { eventContext[eventHandle]() }, false );
+            elem.addEventListener( type, function() { eventHandle.call(eventContext) }, false );
         } else if ( elem.attachEvent ) {
-            elem.attachEvent( "on" + type, function() {  eventContext[eventHandle]() } );
+            elem.attachEvent( "on" + type, function() {  eventHandle.call(eventContext) } );
             
         // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
         } else {
-            elem["on"+type]=function() {  eventContext[eventHandle]() };
+            elem["on"+type]=function() {  eventHandle.call(eventContext) };
         }
     }
 
