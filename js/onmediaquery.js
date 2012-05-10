@@ -9,16 +9,16 @@
  * Date: Tue 1 May, 2012
  */
 
-var MQ = (function(mq){
+var MQ = (function(mq) {
     var mq = mq || {};
     
-    mq.init = function ( query_array ) {
+    mq.init = function(query_array) {
 
          // Container for all callbacks registered with the plugin
-        this.callbacks = new Array();
+        this.callbacks = [];
         this.context = ''; //current active query
 
-        if(typeof(query_array) !== 'undefined' ) {
+        if (typeof(query_array) !== 'undefined' ) {
             for (i = 0; i < query_array.length; i++) {
                 var r = this.addQuery(query_array[i]);
             }
@@ -35,15 +35,15 @@ var MQ = (function(mq){
         var body_after;
 
         // Get the value of body:after from the element style.
-        if(!window.getComputedStyle) return;
+        if (!window.getComputedStyle) return;
 
         body_after = window.getComputedStyle(document.body,':after').getPropertyValue('content');
      
         // No support for css :after? return and avoid errors;
-        if(body_after == null) return;
+        if (body_after == null) return;
 
         body_after = body_after.replace(/['"]/g, '');
-        if(body_after !== this.context) {
+        if (body_after !== this.context) {
             this.triggerCallbacks(body_after);
         }
         this.context = body_after;
@@ -59,7 +59,7 @@ var MQ = (function(mq){
     //
     // Returns a reference to the query_object
 
-    mq.addQuery = function( query_object ) {
+    mq.addQuery = function(query_object) {
         if (query_object == null || query_object == undefined) return;
 
         this.callbacks.push(query_object);
@@ -67,12 +67,12 @@ var MQ = (function(mq){
     };
 
     // Remove a query_object by reference.
-    mq.removeQuery = function( query_object ) {
+    mq.removeQuery = function(query_object) {
         if (query_object == null || query_object == undefined) return;
 
         var match = -1;
 
-        while( (match = this.callbacks.indexOf(query_object)) > -1 ) {
+        while ((match = this.callbacks.indexOf(query_object)) > -1) {
             this.callbacks.splice(match, 1);
         }
     }
@@ -84,7 +84,7 @@ var MQ = (function(mq){
 
         for (i = 0; i < this.callbacks.length; i++) {
             callback_function = this.callbacks[i].callback;
-            if( this.callbacks[i].context === size && callback_function !== undefined) {
+            if (this.callbacks[i].context === size && callback_function !== undefined) {
                 callback_function();
             }
         }
@@ -94,14 +94,14 @@ var MQ = (function(mq){
     mq.addEvent = function(elem, type, eventHandle, eventContext) {
         if (elem == null || elem == undefined) return;
         // If the browser supports event listeners, use them.
-        if ( elem.addEventListener ) {
-            elem.addEventListener( type, function() { eventHandle.call(eventContext) }, false );
-        } else if ( elem.attachEvent ) {
-            elem.attachEvent( "on" + type, function() {  eventHandle.call(eventContext) } );
+        if (elem.addEventListener) {
+            elem.addEventListener(type, function() { eventHandle.call(eventContext) }, false);
+        } else if (elem.attachEven ) {
+            elem.attachEvent("on" + type, function() {  eventHandle.call(eventContext) });
             
         // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
         } else {
-            elem["on"+type]=function() {  eventHandle.call(eventContext) };
+            elem["on" + type] = function() { eventHandle.call(eventContext) };
         }
     }
 
