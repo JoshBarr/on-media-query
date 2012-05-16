@@ -6,9 +6,7 @@
 
 <title>onMediaQuery - Responsive JS</title>
 
-
 <style>
-
 body:after {
 	content: 'mobile';
 	display: none;
@@ -66,20 +64,20 @@ body:after {
 	<pre class='css_code'>
 &lt;style&gt;
 body:after {
-	content: 'mobile';
-	display: none; /* comment this line for debugging purposes */
+  content: 'mobile';
+  display: none; /* comment this line for debugging purposes */
 }
 
 @media screen and (min-width: 35em) {
-	body:after {
-		content: 'skinny'
-	}
+  body:after {
+    content: 'skinny'
+  }
 }
 
 @media screen and (min-width: 56em) {
-	body:after {
-		content: 'wide-screen'
-	}
+  body:after {
+    content: 'wide-screen'
+  }
 }
 &lt;/style&gt;
 	</pre>
@@ -93,32 +91,30 @@ body:after {
 	</p>
 <pre class='js_code'>
 &lt;script type="text/javascript" src="js/onmediaquery.min.js"&gt;&lt;/script&gt;
-&lt;script&gt;
+&lt;script type="text/javascript"&gt;
 
 // Define the queries you want to test for.. and what to do if they're TRUE
-var queries = [
-	{
-		context: 'mobile',
-		callback: function() {
-			console.log('Mobile callback. Maybe hook up some tel: numbers?');
-			// Your mobile specific logic can go here. 
-		}
-	},
-	{
-		context: 'skinny',
-		callback: function() {
-			console.log('skinny callback! Swap the class on the body element.');
-			// Your tablet specific logic can go here.
-		}
-	},
-	{
-		context: 'wide-screen',
-		callback: function() {
-			console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
-			// your desktop specific logic can go here.
-		}
-	}
-];
+var queries = {
+  mobile: function() {
+    // Your mobile specific logic can go here. 
+    console.log('Mobile callback. Maybe hook up some tel: numbers?');
+  },
+  skinny: function() {
+    // Your tablet specific logic can go here.
+    console.log('skinny callback! Swap the class on the body element.');
+  },
+  'wide-screen': [
+    function() {
+      // your desktop specific logic can go here.
+      console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
+    },
+    function() {
+      // hell - let's have another one
+      console.log('another wide-screen callback!');
+    }
+  ]
+};
+
 // Go!
 MQ.init(queries);
 
@@ -135,20 +131,16 @@ MQ.init(queries);
 </p>
 <pre class='js_code'>
 //Add a media query test
-var my_query = MQ.addQuery({
-	context: 'skinny', 
-	callback: function() { 
-		console.log( 'second skinny callback!' )
-	}
+var my_query_callback = MQ.addQuery('skinny', function() { 
+  console.log( 'second skinny callback!' );
 });
-
 </pre>
 <p>
 	The addQuery function returns a reference to the object you added, so you can remove it later if you need to:
 </p>
 <pre class='js_code'>
 //Remove a media query test by reference
-MQ.removeQuery( my_query );
+MQ.removeQuery( 'skinny', my_query_callback );
 </pre>
 <p>
 	This weighs in at a whopping <strong>581 bytes</strong> minified and gzipped, well worth including in your next project.
@@ -160,33 +152,30 @@ MQ.removeQuery( my_query );
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" src="js/onmediaquery.min.js"></script>
-<script language='javascript'>
+<script src="js/onmediaquery.js"></script>
+<script>
 var ie = document.getElementById('ie_test');
 
-queries = [
-	{
-		context: 'mobile',
-		callback: function() {
-			ie.innerHTML = 'mobile';
-			console.log('mobile callback woohoo!');
-		}
+var queries = {
+	mobile: function() {
+		ie.innerHTML = 'mobile';
+		console.log('mobile callback woohoo!');
 	},
-	{
-		context: 'skinny',
-		callback: function() {
-			console.log('skinny callback woohoo!');
-			ie.innerHTML = 'skinny';
-		}
+  skinny: function() {
+		console.log('skinny callback woohoo!');
+		ie.innerHTML = 'skinny';
 	},
-	{
-		context: 'wide-screen',
-		callback: function() {
-			console.log('widescreen callback woohoo!');
-			ie.innerHTML = 'desktop';
-		}
-	}
-];
+  'wide-screen': [
+	  function() {
+			  // your desktop specific logic can go here.
+			  console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
+	  },
+	  function() {
+        // hell - let's have another one
+        console.log('another wide-screen callback!');
+    }
+	]
+};
 
 MQ.init(queries);
 

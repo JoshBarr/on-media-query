@@ -22,20 +22,20 @@ that correspond to the media queries you wish to test for:
 <style>
 
 body:after {
-	content: 'mobile';
-	display: none;
+  content: 'mobile';
+  display: none;
 }
 
 @media screen and (min-width: 35em) {
-	body:after {
-		content: 'skinny'
-	}
+  body:after {
+    content: 'skinny'
+  }
 }
 
 @media screen and (min-width: 56em) {
-	body:after {
-		content: 'wide-screen'
-	}
+  body:after {
+    content: 'wide-screen'
+  }
 }
 
 </style>
@@ -48,29 +48,26 @@ Define the queries you want to test for.. and what to do if they're TRUE
 <script type="text/javascript" src="js/onmediaquery.min.js"></script>
 <script>
 
-var queries = [
-	{
-		context: 'mobile',
-		callback: function() {
-			console.log('Mobile callback. Maybe hook up some tel: numbers?');
-			// Your mobile specific logic can go here. 
-		}
-	},
-	{
-		context: 'skinny',
-		callback: function() {
-			console.log('skinny callback! Swap the class on the body element.');
-			// Your tablet specific logic can go here.
-		}
-	},
-	{
-		context: 'wide-screen',
-		callback: function() {
-			console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
-			// your desktop specific logic can go here.
-		}
-	}
-];
+var queries = {
+  mobile: function() {
+    // Your mobile specific logic can go here. 
+    console.log('Mobile callback. Maybe hook up some tel: numbers?');
+  },
+  skinny: function() {
+    // Your tablet specific logic can go here.
+    console.log('skinny callback! Swap the class on the body element.');
+  },
+  'wide-screen': [
+    function() {
+      // your desktop specific logic can go here.
+      console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
+    },
+    function() {
+      // hell - let's have another one
+      console.log('another wide-screen callback!');
+    }
+  ]
+};
 // Go!
 MQ.init(queries);
 
@@ -86,11 +83,8 @@ test whether a query is true.
 ```Javascript
 <script>
 
-var my_query = MQ.addQuery({
-	context: 'skinny', 
-	callback: function() { 
-		console.log( 'second skinny callback!' )
-	}
+var my_query = MQ.addQuery('skinny', function() { 
+  console.log( 'second skinny callback!' );
 });
 
 </script>
