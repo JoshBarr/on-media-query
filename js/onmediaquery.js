@@ -63,6 +63,12 @@ var MQ = (function(mq) {
         if (query_object == null || query_object == undefined) return;
 
         this.callbacks.push(query_object);
+
+        // Fire the added callback if it matches the current context
+        if (this.context === query_object.context) {
+            query_object.callback();
+        }
+        
         return this.callbacks[ this.callbacks.length - 1];
     };
 
