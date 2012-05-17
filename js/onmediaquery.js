@@ -6,17 +6,22 @@
  * Released under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: Tue 1 May, 2012
+ * Date: Fri 18 May, 2012
  */
 
 var MQ = (function(mq) {
     var mq = mq || {};
     
+    /**
+     * Initialises the MQ object and sets the initial media query callbacks
+     * @returns Void(0)
+     */
     mq.init = function(query_array) {
 
          // Container for all callbacks registered with the plugin
         this.callbacks = [];
         this.context = ''; //current active query
+        this.new_context = ''; //current active query to be read inside callbacks, as this.context won't be set when they're called!
 
         if (typeof(query_array) !== 'undefined' ) {
             for (i = 0; i < query_array.length; i++) {
@@ -31,6 +36,10 @@ var MQ = (function(mq) {
         this.listenForChange();
     }
 
+    /**
+     * Binds to the window.onResize and checks for media query changes
+     * @returns Void(0)
+     */
     mq.listenForChange = function() {
         var body_after;
 
@@ -44,35 +53,50 @@ var MQ = (function(mq) {
 
         body_after = body_after.replace(/['"]/g, '');
         if (body_after !== this.context) {
-            this.triggerCallbacks(body_after);
+            this.new_context = body_after;
+            this.triggerCallbacks(this.new_context);
         }
-        this.context = body_after;
+        this.context = this.new_context;
     }
 
-    // Attach a new query to test.
-    // [query_object] = {
-    //                      context 'some_media_query',
-    //                      callback: function() {
-    //                          //something awesome
-    //                      }
-    //                  }
-    //
-    // Returns a reference to the query_object
-
+    /**
+     * Attach a new query to test.
+     * @param query_object {
+     *     context: ['some_media_query','some_other_media_query'],
+     *     call_for_each_context: true,
+     *     callback: function() {
+     *         //something awesome
+     *     }
+     * }
+     * @returns A reference to the query_object that was added
+     */
     mq.addQuery = function(query_object) {
         if (query_object == null || query_object == undefined) return;
 
         this.callbacks.push(query_object);
-
+        
+        // If the context is passed as a string, turn it into an array (for unified approach elsewhere in the code)
+        if (typeof(query_object.context) == "string") {
+            query_object.context = [query_object.context];
+        }
+        
+        // See if "call_for_each_context" is set, if not, set a default (for unified approach elsewhere in the code)
+        if (typeof(query_object.call_for_each_context) !== "boolean") {
+            query_object.call_for_each_context = true; // Default
+        }
+        
         // Fire the added callback if it matches the current context
-        if (this.context === query_object.context) {
+        if (this.context != '' && this._inArray(this.context, query_object.context)) {
             query_object.callback();
         }
         
         return this.callbacks[ this.callbacks.length - 1];
     };
 
-    // Remove a query_object by reference.
+    /**
+     * Remove a query_object by reference.
+     * @returns Void(0)
+     */
     mq.removeQuery = function(query_object) {
         if (query_object == null || query_object == undefined) return;
 
@@ -83,20 +107,34 @@ var MQ = (function(mq) {
         }
     }
 
-    // Loop through the stored callbacks and execute
-    // the ones that are bound to the current context.
+    /**
+     * Loop through the stored callbacks and execute 
+     * the ones that are bound to the current context.
+     * @returns Void(0)
+     */
     mq.triggerCallbacks = function(size) {
-        var i, callback_function;
+        var i, callback_function, call_for_each_context;
 
         for (i = 0; i < this.callbacks.length; i++) {
+
+            // Don't call for each context?
+            if (this.callbacks[i].call_for_each_context == false && this._inArray(this.context, this.callbacks[i].context)) {
+                // Was previously called, and we don't want to call it for each context
+                continue;
+            }
+
             callback_function = this.callbacks[i].callback;
-            if (this.callbacks[i].context === size && callback_function !== undefined) {
+            if (this._inArray(size, this.callbacks[i].context) && callback_function !== undefined) {
                 callback_function();
             }
+
         }
     }
 
-    // Swiss Army Knife event binding, in lieu of jQuery.
+    /**
+     * Swiss Army Knife event binding, in lieu of jQuery.
+     * @returns Void(0)
+     */
     mq.addEvent = function(elem, type, eventHandle, eventContext) {
         if (elem == null || elem == undefined) return;
         // If the browser supports event listeners, use them.
@@ -109,6 +147,21 @@ var MQ = (function(mq) {
         } else {
             elem["on" + type] = function() { eventHandle.call(eventContext) };
         }
+    }
+    
+    /**
+     * Internal helper function that checks wether "needle" occurs in "haystack"
+     * @param needle Mixed Value to look for in haystack array
+     * @param haystack Array Haystack array to search in
+     * @returns Boolan True if the needle occurs, false otherwise
+     */
+    mq._inArray = function(needle, haystack)
+    {
+        var length = haystack.length;
+        for(var i = 0; i < length; i++) {
+            if(haystack[i] == needle) return true;
+        }
+        return false;
     }
 
     // Expose the functions.
