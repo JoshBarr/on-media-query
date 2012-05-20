@@ -23,6 +23,13 @@ var MQ = (function(mq) {
     var type = function(object) {
         return Object.prototype.toString.call(object).match(/\s(\w+)/)[1].toLowerCase();
     };
+
+    // Helper to execute an array of callbacks
+    var execute = function( callbacks ) {
+        for(var i=0, len=callbacks.length; i<len; i++) {
+            callbacks[i]();
+        }
+    };
     
     mq.init = function(queries) {
 
@@ -71,9 +78,13 @@ var MQ = (function(mq) {
         var callbacks = type(callback) === 'array' ? callback : [callback];
         this.queries[context].push.apply( this.queries[context], callbacks );
         
+        if ( context === this.context ) {
+            execute( callbacks );
+        }
+        
         return callback;
     };
-
+    
     // Remove a query_object by reference.
     mq.removeQuery = function( context, callback ) {
         var callbacks = this.queries[context] || [];
@@ -87,10 +98,7 @@ var MQ = (function(mq) {
     // Loop through the stored callbacks and execute
     // the ones that are bound to the current context.
     mq.triggerCallbacks = function(size) {
-        var callbacks = this.queries[size] || [];
-        for (var i=0, len=callbacks.length; i<len; i++) {
-            callbacks[i]();
-        }
+        execute( this.queries[size] || [] );
     };
 
     // Swiss Army Knife event binding, in lieu of jQuery.
