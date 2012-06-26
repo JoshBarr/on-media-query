@@ -22,8 +22,6 @@ var MQ = (function(mq) {
         this.callbacks = [];
         this.context = ''; //current active query
         this.new_context = ''; //current active query to be read inside callbacks, as this.context won't be set when they're called!
-        this.css_method = {};
-
 
         if (typeof(query_array) !== 'undefined' ) {
             for (i = 0; i < query_array.length; i++) {
