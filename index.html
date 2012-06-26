@@ -1,42 +1,63 @@
 <!doctype html>
 <html>
 <head>
+	<link rel='stylesheet' type='text/css' href='css/style.css'>
+	<meta name = "viewport" content = "initial-scale = 1.0">
+	<title>onMediaQuery - Responsive JS</title>
+	<style>
+		/*
+		-----------------------------------------------------------
+		This is a hack. It works in:
+		FF 3.6+, Anroid 2.2+, Safari, Chrome, IE7, IE8, IE9+
+		-----------------------------------------------------------
+		*/
 
-<link rel='stylesheet' type='text/css' href='css/style.css'>
+		html {
+			font-family: 'mobile';
+		}
 
-<title>onMediaQuery - Responsive JS</title>
+		* html { /* IE6 */
+			font-family: 'desktop'
+		}
+		
+		*+html { /* IE7 */
+			font-family: 'desktop'
+		}
+		
+		@media \0screen {
+			html {  /* IE8 */
+				font-family: 'desktop'
+			}
+		}
+
+		/* Reset your font families here.       
+		 ----------------------------------- */
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
 
 
-<style>
+		/* Queries for supported browsers.       
+		 ----------------------------------- */
 
-body:after {
-	content: 'mobile';
-	display: none;
-}
+		@media screen and (min-width: 35em) {
+			html {
+				font-family: "skinny";
+			}
+		}
 
-@media screen and (min-width: 35em) {
-	body:after {
-		content: 'skinny'
-	}
-}
+		@media screen and (min-width: 56em) {
+			html {
+				font-family: "desktop";
+			}
+		}
 
-@media screen and (min-width: 56em) {
-	body:after {
-		content: 'wide-screen'
-	}
-}
-
-</style>
-
+	</style>
 </head>
-
 <body>
-
 <!-- #mobile nav -->
 <div id="mobile_site_nav" class='nav'>
-
     <div id="nav_items" class='mobile_nav_items'>
-
         <ul>
             <li><a href='#1'>Home</a></li>
             <li><a href='#2'>Sprockets</a></li>
@@ -44,125 +65,149 @@ body:after {
             <li><a href='#3'>Contact us</a></li>
         </ul>
     </div>
-
-    
 </div>
 <!-- /#mobile nav -->
 
 <div id='wrapper'>
+	<div id='desc'>
+		<h2 class='title'>onMediaQuery</h2>
+		<h3>A simple way to handle Media Queries with Javascript.</h3>
+		<p>
+			Chances are, you're going to want to execute some code based on media queries in your snazzy responsive layout. At Springload we've been doing this with the <code>window.matchMedia()</code> function with great results, but this has meant maintaining breakpoints in two places &mdash; once in our stylesheet and once in our JS.
+		</p>
+		<p>
+			Clearly this isn't very DRY. Right now, that's not too much of a problem, but the bigger a project grows, the more chance there is for this duplicate information to get out of sync. Fortunately, there's a better way. 
+		</p>
+		<p>
+			<a href='#'>Jeremy Keith</a> recently posted a great article about using <a href='http://adactio.com/journal/5429/' target='_blank'>conditional CSS</a> to add properties to the page that are enumerable in Javascript. Jeremy uses the <code>:after</code> psuedo property on the <code>&lt;body&gt;</code> tag to add information about the current viewport. The markup is really simple: 
+		</p>
+		<pre class='css_code'>
+			/*
+			-----------------------------------------------------------
+			This is a hack. It works in:
+			FF 3.6+, Anroid 2.2+, Safari, Chrome, IE7, IE8, IE9+
+			-----------------------------------------------------------
+			*/
 
-<div id='desc'>
-	<h2 class='title'>onMediaQuery</h2>
-	<h3>A simple way to handle Media Queries with Javascript.</h3>
-	<p>
-		Chances are, you're going to want to execute some code based on media queries in your snazzy responsive layout. At Springload we've been doing this with the <code>window.matchMedia()</code> function with great results, but this has meant maintaining breakpoints in two places &mdash; once in our stylesheet and once in our JS.
-	</p>
-	<p>
-		Clearly this isn't very DRY. Right now, that's not too much of a problem, but the bigger a project grows, the more chance there is for this duplicate information to get out of sync. Fortunately, there's a better way. 
-	</p>
-	<p>
-		<a href='#'>Jeremy Keith</a> recently posted a great article about using <a href='http://adactio.com/journal/5429/' target='_blank'>conditional CSS</a> to add properties to the page that are enumerable in Javascript. Jeremy uses the <code>:after</code> psuedo property on the <code>&lt;body&gt;</code> tag to add information about the current viewport. The markup is really simple: 
-	</p>
-	<pre class='css_code'>
-&lt;style&gt;
-body:after {
-	content: 'mobile';
-	display: none; /* comment this line for debugging purposes */
-}
+			html {
+				font-family: 'mobile';
+			}
 
-@media screen and (min-width: 35em) {
-	body:after {
-		content: 'skinny'
-	}
-}
-
-@media screen and (min-width: 56em) {
-	body:after {
-		content: 'wide-screen'
-	}
-}
-&lt;/style&gt;
-	</pre>
-	<p>
-		This gives us a hidden string containing the currently active query, which we can fish out using a couple of lines of Javascript. All we need to do is evaluate the window when it resizes, check if the body:after property has changed, and fire a callback.
-	</p>
-
-	<h3>The Javascript</h3>
-	<p>
-		We've wrapped up Jeremy's great solution in a little Javascript module that can be inserted into your page. It's super lean and engineered with mobile loading times in mind. 		
-	</p>
-<pre class='js_code'>
-&lt;script type="text/javascript" src="js/onmediaquery.min.js"&gt;&lt;/script&gt;
-&lt;script&gt;
-
-// Define the queries you want to test for.. and what to do if they're TRUE
-var queries = [
-	{
-		context: 'mobile',
-		callback: function() {
-			console.log('Mobile callback. Maybe hook up some tel: numbers?');
-			// Your mobile specific logic can go here. 
-		}
-	},
-	{
-		context: 'skinny',
-		callback: function() {
-			console.log('skinny callback! Swap the class on the body element.');
-			// Your tablet specific logic can go here.
-		}
-	},
-	{
-		context: 'wide-screen',
-		callback: function() {
-			console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
-			// your desktop specific logic can go here.
-		}
-	}
-];
-// Go!
-MQ.init(queries);
-
-&lt;/script&gt;
-</pre>
-<p>
-	Make sure that the strings you define in the <code>context:</code> property match the <code>:after</code> content in your css! 
-</p>
+			* html { /* IE6 */
+				font-family: 'desktop'
+			}
+			
+			*+html { /* IE7 */
+				font-family: 'desktop'
+			}
+			
+			@media \0screen {
+				html {  /* IE8 */
+					font-family: 'desktop'
+				}
+			}
 
 
-<h3>Adding queries</h3>
-<p>
-	As well as passing an array of objects when you initialise the plugin, you can add extra callbacks at any time. This is especially handy if you've got multiple JS files across the site that need to test whether a query is true.
-</p>
-<pre class='js_code'>
-//Add a media query test
-var my_query = MQ.addQuery({
-	context: 'skinny', 
-	callback: function() { 
-		console.log( 'second skinny callback!' )
-	}
-});
+			/* Reset your font families here.       
+			 ----------------------------------- */
+			body {
+				font-family: Arial, Helvetica, sans-serif;
+			}
 
-</pre>
-<p>
-	The addQuery function returns a reference to the object you added, so you can remove it later if you need to:
-</p>
-<pre class='js_code'>
-//Remove a media query test by reference
-MQ.removeQuery( my_query );
-</pre>
-<p>
-	This weighs in at a whopping <strong>581 bytes</strong> minified and gzipped, well worth including in your next project.
-</p>
 
-<h3 id='ie_test'></h3>
-<p id='dump'></p>
-</div>
+			/* Queries for supported browsers.       
+			 ----------------------------------- */
+
+			@media screen and (min-width: 35em) {
+				html {
+					font-family: "skinny";
+				}
+			}
+
+			@media screen and (min-width: 56em) {
+				html {
+					font-family: "desktop";
+				}
+			}
+		</pre>
+		<p>
+			This gives us a hidden string containing the currently active query, which we can fish out using a couple of lines of Javascript. All we need to do is evaluate the window when it resizes, check if the body:after property has changed, and fire a callback.
+		</p>
+
+		<h3>The Javascript</h3>
+		<p>
+			We've wrapped up Jeremy's great solution in a little Javascript module that can be inserted into your page. It's super lean and engineered with mobile loading times in mind. 		
+		</p>
+		<pre class='js_code'>
+		&lt;script type="text/javascript" src="js/onmediaquery.min.js"&gt;&lt;/script&gt;
+		&lt;script&gt;
+
+		// Define the queries you want to test for.. and what to do if they're TRUE
+		var queries = [
+			{
+				context: 'mobile',
+				callback: function() {
+					console.log('Mobile callback. Maybe hook up some tel: numbers?');
+					// Your mobile specific logic can go here. 
+				}
+			},
+			{
+				context: 'skinny',
+				callback: function() {
+					console.log('skinny callback! Swap the class on the body element.');
+					// Your tablet specific logic can go here.
+				}
+			},
+			{
+				context: 'wide-screen',
+				callback: function() {
+					console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
+					// your desktop specific logic can go here.
+				}
+			}
+		];
+		// Go!
+		MQ.init(queries);
+
+		&lt;/script&gt;
+		</pre>
+		<p>
+			Make sure that the strings you define in the <code>context:</code> property match the <code>:after</code> content in your css! 
+		</p>
+
+
+		<h3>Adding queries</h3>
+		<p>
+			As well as passing an array of objects when you initialise the plugin, you can add extra callbacks at any time. This is especially handy if you've got multiple JS files across the site that need to test whether a query is true.
+		</p>
+		<pre class='js_code'>
+		//Add a media query test
+		var my_query = MQ.addQuery({
+			context: 'skinny', 
+			callback: function() { 
+				console.log( 'second skinny callback!' )
+			}
+		});
+		</pre>
+		<p>
+			The addQuery function returns a reference to the object you added, so you can remove it later if you need to:
+		</p>
+		<pre class='js_code'>
+		//Remove a media query test by reference
+		MQ.removeQuery( my_query );
+		</pre>
+		<p>
+			This weighs in at a whopping <strong>700 bytes</strong> minified and gzipped, well worth including in your next project.
+		</p>
+
+		<h3 id='ie_test'></h3>
+	</div>
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" src="js/onmediaquery.min.js"></script>
+<script id="responder" type="text/javascript" src="js/onmediaquery.js"></script>
 <script language='javascript'>
-var ie = document.getElementById('ie_test');
+var ie, t, n;
 
 queries = [
 	{
@@ -188,10 +233,22 @@ queries = [
 	}
 ];
 
-MQ.init(queries);
+window.onload = function() {
+ 	ie = document.getElementById('ie_test');
+	MQ.init(queries);
+	
+	var my_query = MQ.addQuery({
+		context: ['skinny','desktop'],
+		call_for_each_context: false, 
+		callback: function() { 
+			console.log( 'second skinny callback!' )
+		}
+	});
+}
+
+
 
 </script> 
-    
 <!-- End scripts -->
 
 </body>

@@ -22,6 +22,8 @@ var MQ = (function(mq) {
         this.callbacks = [];
         this.context = ''; //current active query
         this.new_context = ''; //current active query to be read inside callbacks, as this.context won't be set when they're called!
+        this.css_method = {};
+
 
         if (typeof(query_array) !== 'undefined' ) {
             for (i = 0; i < query_array.length; i++) {
@@ -43,19 +45,27 @@ var MQ = (function(mq) {
     mq.listenForChange = function() {
         var body_after;
 
-        // Get the value of body:after from the element style.
-        if (!window.getComputedStyle) return;
+        // Get the value of html { font-family } from the element style.
+        if (document.documentElement.currentStyle) {
+            query_string = document.documentElement.currentStyle["fontFamily"];
+        }
 
-        body_after = window.getComputedStyle(document.body,':after').getPropertyValue('content');
-     
-        // No support for css :after? return and avoid errors;
-        if (body_after == null) return;
+        if (window.getComputedStyle) {
+            query_string = window.getComputedStyle(document.documentElement).getPropertyValue('font-family');
+        }
 
-        body_after = body_after.replace(/['"]/g, '');
-        if (body_after !== this.context) {
-            this.new_context = body_after;
+        // No support for CSS enumeration? Return and avoid errors.
+        if (query_string == null) return;
+
+        // Android browsers place a "," after an item in the font family list.
+        // Most browsers either single or double quote the string.
+        query_string = query_string.replace(/['",]/g, '');
+
+        if (query_string !== this.context) {
+            this.new_context = query_string;
             this.triggerCallbacks(this.new_context);
         }
+
         this.context = this.new_context;
     }
 
