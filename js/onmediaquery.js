@@ -1,16 +1,17 @@
 /*
  * onMediaQuery
  * http://springload.co.nz/love-the-web/
+ * 
+ * modified by @patocallaghan https://github.com/patocallaghan
  *
  * Copyright 2012, Springload
  * Released under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: Fri 18 May, 2012
+ * Date: Thu 11 Oct, 2012
  */
 
 var MQ = (function(mq) {
-    var mq = mq || {};
     
     /**
      * Initialises the MQ object and sets the initial media query callbacks
@@ -34,7 +35,7 @@ var MQ = (function(mq) {
 
         // Figure out which query is active on load.
         this.listenForChange();
-    }
+    };
 
     /**
      * Binds to the window.onResize and checks for media query changes
@@ -53,7 +54,7 @@ var MQ = (function(mq) {
         }
 
         // No support for CSS enumeration? Return and avoid errors.
-        if (query_string == null) return;
+        if (query_string === null) return;
 
         // Android browsers place a "," after an item in the font family list.
         // Most browsers either single or double quote the string.
@@ -61,11 +62,12 @@ var MQ = (function(mq) {
 
         if (query_string !== this.context) {
             this.new_context = query_string;
-            this.triggerCallbacks(this.new_context);
+            this.triggerCallbacks(this.context, 'unmatch');
+            this.triggerCallbacks(this.new_context, 'match');
         }
 
         this.context = this.new_context;
-    }
+    };
 
     /**
      * Attach a new query to test.
@@ -79,7 +81,7 @@ var MQ = (function(mq) {
      * @returns A reference to the query_object that was added
      */
     mq.addQuery = function(query_object) {
-        if (query_object == null || query_object == undefined) return;
+        if (query_object === null || query_object === undefined) return;
 
         this.callbacks.push(query_object);
         
@@ -94,7 +96,7 @@ var MQ = (function(mq) {
         }
         
         // Fire the added callback if it matches the current context
-        if (this.context != '' && this._inArray(this.context, query_object.context)) {
+        if (this.context !== '' && this._inArray(this.context, query_object.context)) {
             query_object.callback();
         }
         
@@ -106,56 +108,74 @@ var MQ = (function(mq) {
      * @returns Void(0)
      */
     mq.removeQuery = function(query_object) {
-        if (query_object == null || query_object == undefined) return;
+        if (query_object === null || query_object === undefined) return;
 
         var match = -1;
 
         while ((match = this.callbacks.indexOf(query_object)) > -1) {
             this.callbacks.splice(match, 1);
         }
-    }
+    };
 
     /**
-     * Loop through the stored callbacks and execute 
+     * Loop through the stored callbacks and execute
      * the ones that are bound to the current context.
      * @returns Void(0)
      */
-    mq.triggerCallbacks = function(size) {
+    mq.triggerCallbacks = function(size, key) {
         var i, callback_function, call_for_each_context;
 
         for (i = 0; i < this.callbacks.length; i++) {
 
             // Don't call for each context?
-            if (this.callbacks[i].call_for_each_context == false && this._inArray(this.context, this.callbacks[i].context)) {
+            if (this.callbacks[i].call_for_each_context === false && this._inArray(this.context, this.callbacks[i].context)) {
                 // Was previously called, and we don't want to call it for each context
                 continue;
             }
 
-            callback_function = this.callbacks[i].callback;
+            callback_function = this.callbacks[i][key];
             if (this._inArray(size, this.callbacks[i].context) && callback_function !== undefined) {
                 callback_function();
             }
 
         }
-    }
+    };
 
     /**
      * Swiss Army Knife event binding, in lieu of jQuery.
      * @returns Void(0)
      */
     mq.addEvent = function(elem, type, eventHandle, eventContext) {
-        if (elem == null || elem == undefined) return;
+        if (elem === null || elem === undefined) return;
         // If the browser supports event listeners, use them.
         if (elem.addEventListener) {
-            elem.addEventListener(type, function() { eventHandle.call(eventContext) }, false);
+            elem.addEventListener(type, function() { eventHandle.call(eventContext); }, false);
         } else if (elem.attachEven ) {
-            elem.attachEvent("on" + type, function() {  eventHandle.call(eventContext) });
+            elem.attachEvent("on" + type, function() {  eventHandle.call(eventContext); });
             
         // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
         } else {
-            elem["on" + type] = function() { eventHandle.call(eventContext) };
+            elem["on" + type] = function() { eventHandle.call(eventContext); };
         }
-    }
+    };
+
+    /**
+     * Function to return the mediaquery's previous context
+     * @returns String returns the current mediaquery's context
+     */
+    mq.getPreviousContext = function()
+    {
+        return this.context;
+    };
+
+    /**
+     * Function to return the mediaquery's current context
+     * @returns String returns the current mediaquery's context
+     */
+    mq.getContext = function()
+    {
+        return this.new_context;
+    };
     
     /**
      * Internal helper function that checks wether "needle" occurs in "haystack"
@@ -170,7 +190,7 @@ var MQ = (function(mq) {
             if(haystack[i] == needle) return true;
         }
         return false;
-    }
+    };
 
     // Expose the functions.
     return mq;
