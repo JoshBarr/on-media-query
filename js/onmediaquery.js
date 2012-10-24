@@ -95,7 +95,7 @@ var MQ = (function(mq) {
         
         // Fire the added callback if it matches the current context
         if (this.context !== '' && this._inArray(this.context, query_object.context)) {
-            query_object.callback();
+            query_object.match();
         }
         
         return this.callbacks[ this.callbacks.length - 1];
