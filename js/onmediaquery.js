@@ -1,14 +1,12 @@
 /*
  * onMediaQuery
  * http://springload.co.nz/love-the-web/
- * 
- * modified by @patocallaghan https://github.com/patocallaghan
  *
  * Copyright 2012, Springload
  * Released under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: Thu 11 Oct, 2012
+ * Date: Fri 24 October, 2012
  */
 
 var MQ = (function(mq) {
@@ -128,9 +126,12 @@ var MQ = (function(mq) {
         for (i = 0; i < this.callbacks.length; i++) {
 
             // Don't call for each context?
-            if (this.callbacks[i].call_for_each_context === false && this._inArray(this.context, this.callbacks[i].context)) {
-                // Was previously called, and we don't want to call it for each context
-                continue;
+            if(this.callbacks[i].call_for_each_context === false) {
+                if ((key === 'match' && this._inArray(this.context, this.callbacks[i].context)) ||
+                    (key === 'unmatch' && this._inArray(this.new_context, this.callbacks[i].context))) {
+                    // Was previously called, and we don't want to call it for each context
+                    continue;
+                }
             }
 
             callback_function = this.callbacks[i][key];
