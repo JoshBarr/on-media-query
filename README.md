@@ -128,6 +128,7 @@ As well as passing an array of objects when you initialise the
 plugin, you can add extra callbacks at any time. This is especially
 handy if you've got multiple JS files across the site that need to
 test whether a query is true.
+
 ```Javascript
 <script>
 
