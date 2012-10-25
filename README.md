@@ -51,16 +51,25 @@ that correspond to the media queries you wish to test for:
 
 	/* Queries for supported browsers.       
 	 ----------------------------------- */
-
+	body:after {
+		display: none;
+	}
+	
 	@media screen and (min-width: 35em) {
 		html {
 			font-family: "skinny";
+		}
+		body:after {
+			content: "skinny";
 		}
 	}
 
 	@media screen and (min-width: 56em) {
 		html {
 			font-family: "desktop";
+		}
+		body:after {
+			content: "desktop";
 		}
 	}
 
@@ -69,7 +78,10 @@ that correspond to the media queries you wish to test for:
 
 2. JS
 -------------------------------
-Define the queries you want to test for.. and what to do if they're TRUE
+Define the queries you want to test for.. and what to do if they match.
+
+You can also decide what to do when a query unmatches, for example un-binding that pesky mobile nav event listener
+
 ```javascript
 <script type="text/javascript" src="js/onmediaquery.min.js"></script>
 <script>
@@ -77,21 +89,28 @@ Define the queries you want to test for.. and what to do if they're TRUE
 var queries = [
 	{
 		context: 'mobile',
-		callback: function() {
+		match: function() {
 			console.log('Mobile callback. Maybe hook up some tel: numbers?');
 			// Your mobile specific logic can go here. 
+		},
+		unmatch: function() {
+			// We're leaving mobile.	
 		}
 	},
 	{
 		context: 'skinny',
-		callback: function() {
+		match: function() {
 			console.log('skinny callback! Swap the class on the body element.');
 			// Your tablet specific logic can go here.
-		}
+		},
+		unmatch: function() {
+			console.log('leaving skinny context!');
+		},
+		
 	},
 	{
 		context: 'wide-screen',
-		callback: function() {
+		match: function() {
 			console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
 			// your desktop specific logic can go here.
 		}
@@ -114,7 +133,7 @@ test whether a query is true.
 
 var my_query = MQ.addQuery({
 	context: 'skinny', 
-	callback: function() { 
+	match: function() { 
 		console.log( 'second skinny callback!' )
 	}
 });
@@ -131,7 +150,7 @@ custom controller on mobiles, for instance:
 var my_query = MQ.addQuery({
 	context: ['skinny','desktop'],
 	call_for_each_context: false, 
-	callback: function() { 
+	match: function() { 
 		console.log( 'second skinny callback!' )
 	}
 });
