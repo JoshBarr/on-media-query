@@ -151,7 +151,7 @@ var MQ = (function(mq) {
         // If the browser supports event listeners, use them.
         if (elem.addEventListener) {
             elem.addEventListener(type, function() { eventHandle.call(eventContext); }, false);
-        } else if (elem.attachEven ) {
+        } else if (elem.attachEvent ) {
             elem.attachEvent("on" + type, function() {  eventHandle.call(eventContext); });
             
         // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
