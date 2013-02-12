@@ -146,22 +146,40 @@
 		var queries = [
 			{
 				context: 'mobile',
-				callback: function() {
+				match: function() {
 					console.log('Mobile callback. Maybe hook up some tel: numbers?');
 					// Your mobile specific logic can go here. 
+				},
+				unmatch: function() {
+					// We're leaving mobile.	
 				}
 			},
 			{
 				context: 'skinny',
-				callback: function() {
+				match: function() {
 					console.log('skinny callback! Swap the class on the body element.');
 					// Your tablet specific logic can go here.
+				},
+				unmatch: function() {
+					console.log('leaving skinny context!');
+				}
+				
+			},
+			{
+				context: ['mobile', 'skinny'],
+				call_for_each_context: false,
+				match: function() {
+					console.log('a callback which spans multiple breakpoints, skinny and mobile!');
+					// this callback will only fire once across this range of breakpoints
+				},
+				unmatch: function() {
+					console.log('leaving small context!');
 				}
 			},
 			{
-				context: 'wide-screen',
-				callback: function() {
-					console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
+				context: 'desktop',
+				match: function() {
+					console.log('desktop callback woohoo! Load some heavy desktop JS badddness.');
 					// your desktop specific logic can go here.
 				}
 			}
@@ -184,7 +202,7 @@
 		//Add a media query test
 		var my_query = MQ.addQuery({
 			context: 'skinny', 
-			callback: function() { 
+			match: function() { 
 				console.log( 'second skinny callback!' )
 			}
 		});
@@ -199,7 +217,6 @@
 		<p>
 			This weighs in at a whopping <strong>700 bytes</strong> minified and gzipped, well worth including in your next project.
 		</p>
-
 		<h3 id='ie_test'></h3>
 	</div>
 </div>
@@ -212,23 +229,43 @@ var ie, t, n;
 queries = [
 	{
 		context: 'mobile',
-		callback: function() {
+		match: function() {
 			ie.innerHTML = 'mobile';
 			console.log('mobile callback woohoo!');
+		},
+		unmatch: function(){
+			console.log('mobile callback unmatched!');
 		}
 	},
 	{
 		context: 'skinny',
-		callback: function() {
+		match: function() {
 			console.log('skinny callback woohoo!');
 			ie.innerHTML = 'skinny';
+		},
+		unmatch: function(){
+			console.log('skinny callback unmatched!');
 		}
 	},
 	{
-		context: 'wide-screen',
-		callback: function() {
-			console.log('widescreen callback woohoo!');
+		context: ['mobile', 'skinny'],
+		call_for_each_context: false,
+		match: function() {
+			console.log('a callback which spans multiple breakpoints, skinny and mobile!');
+			// setting 'call_for_each_context' to false means this callback will only fire once across this range of breakpoints
+		},
+		unmatch: function() {
+			console.log('leaving small context!');
+		}
+	},
+	{
+		context: 'desktop',
+		match: function() {
+			console.log('desktop callback woohoo!');
 			ie.innerHTML = 'desktop';
+		},
+		unmatch: function(){
+			console.log('desktop callback unmatched!');
 		}
 	}
 ];
@@ -238,9 +275,9 @@ window.onload = function() {
 	MQ.init(queries);
 	
 	var my_query = MQ.addQuery({
-		context: ['skinny','desktop'],
+		context: ['skinny'],
 		call_for_each_context: false, 
-		callback: function() { 
+		match: function() { 
 			console.log( 'second skinny callback!' )
 		}
 	});
