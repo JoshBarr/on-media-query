@@ -170,7 +170,7 @@
 				call_for_each_context: false,
 				match: function() {
 					console.log('a callback which spans multiple breakpoints, skinny and mobile!');
-					// this callback will only fire once across this range of breakpoints
+					// setting 'call_for_each_context' to false means this callback will only fire once across this range of breakpoints
 				},
 				unmatch: function() {
 					console.log('leaving small context!');
@@ -276,7 +276,6 @@ window.onload = function() {
 	
 	var my_query = MQ.addQuery({
 		context: ['skinny'],
-		call_for_each_context: false, 
 		match: function() { 
 			console.log( 'second skinny callback!' )
 		}
