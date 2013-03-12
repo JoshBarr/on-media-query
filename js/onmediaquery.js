@@ -48,7 +48,7 @@ var MQ = (function(mq) {
         }
 
         if (window.getComputedStyle) {
-            query_string = window.getComputedStyle(document.documentElement).getPropertyValue('font-family');
+            query_string = window.getComputedStyle(document.documentElement,null).getPropertyValue('font-family');
         }
 
         // No support for CSS enumeration? Return and avoid errors.
