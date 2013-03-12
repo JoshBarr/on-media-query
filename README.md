@@ -105,7 +105,7 @@ var queries = [
 		},
 		unmatch: function() {
 			console.log('leaving skinny context!');
-		},
+		}
 		
 	},
 	{
