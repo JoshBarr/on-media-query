@@ -40,7 +40,7 @@ var MQ = (function(mq) {
      * @returns Void(0)
      */
     mq.listenForChange = function() {
-        var body_after;
+        var query_string;
 
         // Get the value of html { font-family } from the element style.
         if (document.documentElement.currentStyle) {
