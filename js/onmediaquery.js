@@ -110,7 +110,7 @@ var MQ = (function(mq) {
 
         var match = -1;
 
-        while ((match = this.callbacks.indexOf(query_object)) > -1) {
+        while ((match = mq._indexOf(query_object,this.callbacks)) > -1) {
             this.callbacks.splice(match, 1);
         }
     };
@@ -192,6 +192,33 @@ var MQ = (function(mq) {
         }
         return false;
     };
+	
+	/**
+     * IE8 do not supports Array.properties.indexOf
+	 * in lieu of jQuery.
+     * @returns int
+     */
+	mq._indexOf = function( elem, arr, i ) {
+		var len;
+
+		if ( arr ) {
+			if ( arr.indexOf ) {
+				return arr.indexOf( elem, i );
+			}
+
+			len = arr.length;
+			i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
+
+			for ( ; i < len; i++ ) {
+				// Skip accessing in sparse arrays
+				if ( i in arr && arr[ i ] === elem ) {
+					return i;
+				}
+			}
+		}
+
+		return -1;
+	}
 
     // Expose the functions.
     return mq;
