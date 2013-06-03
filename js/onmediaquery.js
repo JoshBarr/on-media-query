@@ -192,33 +192,34 @@ var MQ = (function(mq) {
         }
         return false;
     };
-	
-	/**
+    
+    /**
      * IE8 do not supports Array.properties.indexOf
-	 * in lieu of jQuery.
+     * copy from jQuery.
+     * in lieu of jQuery.
      * @returns int
      */
-	mq._indexOf = function( elem, arr, i ) {
-		var len;
-
-		if ( arr ) {
-			if ( arr.indexOf ) {
-				return arr.indexOf( elem, i );
-			}
-
-			len = arr.length;
-			i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
-
-			for ( ; i < len; i++ ) {
-				// Skip accessing in sparse arrays
-				if ( i in arr && arr[ i ] === elem ) {
-					return i;
-				}
-			}
-		}
-
-		return -1;
-	}
+    mq._indexOf = function( elem, arr, i ) 
+    {
+        var len;
+        if ( arr ) {
+            if ( arr.indexOf ) {
+                return arr.indexOf( elem, i );
+            }
+            
+            len = arr.length;
+            i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
+            
+            for ( ; i < len; i++ ) {
+                // Skip accessing in sparse arrays
+                if ( i in arr && arr[ i ] === elem ) {
+                    return i;
+                }
+            }
+        }
+        
+        return -1;
+    }
 
     // Expose the functions.
     return mq;
