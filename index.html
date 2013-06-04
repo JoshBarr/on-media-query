@@ -280,9 +280,23 @@ window.onload = function() {
 			console.log( 'second skinny callback!' )
 		}
 	});
+	
+	//Add a media query test
+	var my_query = MQ.addQuery({
+		context: 'skinny', 
+		match: function() { 
+			console.log( 'second skinny callback!' )
+		}
+	});
+	var callbacklen = MQ.callbacks.length;
+	//Remove a media query test by reference
+	MQ.removeQuery( my_query );
+	if(callbacklen - MQ.callbacks.length === 1){
+		console.log("RemoveQuery test success");
+	}else{
+		console.log("RemoveQuery test failture");
+	}
 }
-
-
 
 </script> 
 <!-- End scripts -->
