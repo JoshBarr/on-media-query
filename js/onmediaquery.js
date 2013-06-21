@@ -151,6 +151,10 @@
                 callback_function();
             }
 
+            if(this._inArray('*', this.callbacks[i].context) && callback_function !== undefined) {
+                callback_function(size);
+            }
+
         }
     };
 
