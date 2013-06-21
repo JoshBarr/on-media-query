@@ -9,8 +9,20 @@
  * Date: Fri 24 October, 2012
  */
 
-var MQ = (function(mq) {
-    
+;(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(function () {
+            // Also create a global in case some scripts
+            // that are loaded still are looking for
+            // a global even when an AMD loader is in use.
+            return (root.MQ = factory(root.MQ || {}));
+        });
+    } else {
+        // Browser globals
+        root.MQ = factory(root.MQ || {});
+    }
+}(this, function(mq) {
     /**
      * Initialises the MQ object and sets the initial media query callbacks
      * @returns Void(0)
@@ -223,5 +235,4 @@ var MQ = (function(mq) {
 
     // Expose the functions.
     return mq;
-
-}(MQ || {}));
+}));
