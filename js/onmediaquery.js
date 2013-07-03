@@ -16,11 +16,11 @@
             // Also create a global in case some scripts
             // that are loaded still are looking for
             // a global even when an AMD loader is in use.
-            return (root.MQ = factory(root.MQ || {}));
+            return (root.MQ = factory(root, root.MQ || {}));
         });
     } else {
         // Browser globals
-        root.MQ = factory(root.MQ || {});
+        root.MQ = factory(root, root.MQ || {});
     }
 }(this, function(mq) {
     /**
@@ -94,22 +94,22 @@
         if (query_object === null || query_object === undefined) return;
 
         this.callbacks.push(query_object);
-        
+
         // If the context is passed as a string, turn it into an array (for unified approach elsewhere in the code)
         if (typeof(query_object.context) == "string") {
             query_object.context = [query_object.context];
         }
-        
+
         // See if "call_for_each_context" is set, if not, set a default (for unified approach elsewhere in the code)
         if (typeof(query_object.call_for_each_context) !== "boolean") {
             query_object.call_for_each_context = true; // Default
         }
-        
+
         // Fire the added callback if it matches the current context
         if (this.context !== '' && this._inArray(this.context, query_object.context)) {
             query_object.match();
         }
-        
+
         return this.callbacks[ this.callbacks.length - 1];
     };
 
@@ -151,6 +151,10 @@
                 callback_function();
             }
 
+            if(this._inArray('*', this.callbacks[i].context) && callback_function !== undefined) {
+                callback_function(size);
+            }
+
         }
     };
 
@@ -165,7 +169,7 @@
             elem.addEventListener(type, function() { eventHandle.call(eventContext); }, false);
         } else if (elem.attachEvent ) {
             elem.attachEvent("on" + type, function() {  eventHandle.call(eventContext); });
-            
+
         // Otherwise, replace the current thing bound to on[whatever]! Consider refactoring.
         } else {
             elem["on" + type] = function() { eventHandle.call(eventContext); };
@@ -189,7 +193,7 @@
     {
         return this.new_context;
     };
-    
+
     /**
      * Internal helper function that checks wether "needle" occurs in "haystack"
      * @param needle Mixed Value to look for in haystack array
@@ -204,24 +208,24 @@
         }
         return false;
     };
-    
+
     /**
      * IE8 do not supports Array.properties.indexOf
      * copy from jQuery.
      * in lieu of jQuery.
      * @returns int
      */
-    mq._indexOf = function( elem, arr, i ) 
+    mq._indexOf = function( elem, arr, i )
     {
         var len;
         if ( arr ) {
             if ( arr.indexOf ) {
                 return arr.indexOf( elem, i );
             }
-            
+
             len = arr.length;
             i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
-            
+
             for ( ; i < len; i++ ) {
                 // Skip accessing in sparse arrays
                 if ( i in arr && arr[ i ] === elem ) {
@@ -229,7 +233,7 @@
                 }
             }
         }
-        
+
         return -1;
     }
 
