@@ -16,11 +16,11 @@
             // Also create a global in case some scripts
             // that are loaded still are looking for
             // a global even when an AMD loader is in use.
-            return (root.MQ = factory(root.MQ || {}));
+            return (root.MQ = factory(root, root.MQ || {}));
         });
     } else {
         // Browser globals
-        root.MQ = factory(root.MQ || {});
+        root.MQ = factory(root, root.MQ || {});
     }
 }(this, function(mq) {
     /**
