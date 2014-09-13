@@ -19,25 +19,25 @@
 		* html { /* IE6 */
 			font-family: 'desktop'
 		}
-		
+
 		*+html { /* IE7 */
 			font-family: 'desktop'
 		}
-		
+
 		@media \0screen {
 			html {  /* IE8 */
 				font-family: 'desktop'
 			}
 		}
 
-		/* Reset your font families here.       
+		/* Reset your font families here.
 		 ----------------------------------- */
 		body {
 			font-family: Arial, Helvetica, sans-serif;
 		}
 
 
-		/* Queries for supported browsers.       
+		/* Queries for supported browsers.
 		 ----------------------------------- */
 
 		@media screen and (min-width: 35em) {
@@ -76,10 +76,10 @@
 			Chances are, you're going to want to execute some code based on media queries in your snazzy responsive layout. At Springload we've been doing this with the <code>window.matchMedia()</code> function with great results, but this has meant maintaining breakpoints in two places &mdash; once in our stylesheet and once in our JS.
 		</p>
 		<p>
-			Clearly this isn't very DRY. Right now, that's not too much of a problem, but the bigger a project grows, the more chance there is for this duplicate information to get out of sync. Fortunately, there's a better way. 
+			Clearly this isn't very DRY. Right now, that's not too much of a problem, but the bigger a project grows, the more chance there is for this duplicate information to get out of sync. Fortunately, there's a better way.
 		</p>
 		<p>
-			<a href='#'>Jeremy Keith</a> recently posted a great article about using <a href='http://adactio.com/journal/5429/' target='_blank'>conditional CSS</a> to add properties to the page that are enumerable in Javascript. Jeremy uses the <code>:after</code> psuedo property on the <code>&lt;body&gt;</code> tag to add information about the current viewport. The markup is really simple: 
+			<a href='#'>Jeremy Keith</a> recently posted a great article about using <a href='http://adactio.com/journal/5429/' target='_blank'>conditional CSS</a> to add properties to the page that are enumerable in Javascript. Jeremy uses the <code>:after</code> psuedo property on the <code>&lt;body&gt;</code> tag to add information about the current viewport. The markup is really simple:
 		</p>
 		<pre class='css_code'>
 			/*
@@ -96,11 +96,11 @@
 			* html { /* IE6 */
 				font-family: 'desktop'
 			}
-			
+
 			*+html { /* IE7 */
 				font-family: 'desktop'
 			}
-			
+
 			@media \0screen {
 				html {  /* IE8 */
 					font-family: 'desktop'
@@ -108,14 +108,14 @@
 			}
 
 
-			/* Reset your font families here.       
+			/* Reset your font families here.
 			 ----------------------------------- */
 			body {
 				font-family: Arial, Helvetica, sans-serif;
 			}
 
 
-			/* Queries for supported browsers.       
+			/* Queries for supported browsers.
 			 ----------------------------------- */
 
 			@media screen and (min-width: 35em) {
@@ -136,7 +136,7 @@
 
 		<h3>The Javascript</h3>
 		<p>
-			We've wrapped up Jeremy's great solution in a little Javascript module that can be inserted into your page. It's super lean and engineered with mobile loading times in mind. 		
+			We've wrapped up Jeremy's great solution in a little Javascript module that can be inserted into your page. It's super lean and engineered with mobile loading times in mind.
 		</p>
 		<pre class='js_code'>
 		&lt;script type="text/javascript" src="js/onmediaquery.min.js"&gt;&lt;/script&gt;
@@ -148,10 +148,10 @@
 				context: 'mobile',
 				match: function() {
 					console.log('Mobile callback. Maybe hook up some tel: numbers?');
-					// Your mobile specific logic can go here. 
+					// Your mobile specific logic can go here.
 				},
 				unmatch: function() {
-					// We're leaving mobile.	
+					// We're leaving mobile.
 				}
 			},
 			{
@@ -163,7 +163,7 @@
 				unmatch: function() {
 					console.log('leaving skinny context!');
 				}
-				
+
 			},
 			{
 				context: ['mobile', 'skinny'],
@@ -174,6 +174,15 @@
 				},
 				unmatch: function() {
 					console.log('leaving small context!');
+				}
+			},
+			{
+				context: ['mobile', 'skinny', 'desktop'],
+				match: function(size) {
+					console.log('default fn fire for: '+size);
+				},
+				unmatch: function(size) {
+					console.log('leaving default context for: '+size);
 				}
 			},
 			{
@@ -190,7 +199,7 @@
 		&lt;/script&gt;
 		</pre>
 		<p>
-			Make sure that the strings you define in the <code>context:</code> property match the <code>:after</code> content in your css! 
+			Make sure that the strings you define in the <code>context:</code> property match the <code>:after</code> content in your css!
 		</p>
 
 
@@ -201,8 +210,8 @@
 		<pre class='js_code'>
 		//Add a media query test
 		var my_query = MQ.addQuery({
-			context: 'skinny', 
-			match: function() { 
+			context: 'skinny',
+			match: function() {
 				console.log( 'second skinny callback!' )
 			}
 		});
@@ -259,6 +268,15 @@ queries = [
 		}
 	},
 	{
+		context: ['mobile', 'skinny', 'desktop'],
+		match: function(size) {
+			console.log('default fn fire for: '+size);
+		},
+		unmatch: function(size) {
+			console.log('leaving default context for: '+size);
+		}
+	},
+	{
 		context: 'desktop',
 		match: function() {
 			console.log('desktop callback woohoo!');
@@ -273,18 +291,18 @@ queries = [
 window.onload = function() {
  	ie = document.getElementById('ie_test');
 	MQ.init(queries);
-	
+
 	var my_query = MQ.addQuery({
 		context: ['skinny'],
-		match: function() { 
+		match: function() {
 			console.log( 'second skinny callback!' )
 		}
 	});
-	
+
 	//Add a media query test
 	var my_query = MQ.addQuery({
-		context: 'skinny', 
-		match: function() { 
+		context: 'skinny',
+		match: function() {
 			console.log( 'second skinny callback!' )
 		}
 	});
@@ -298,7 +316,7 @@ window.onload = function() {
 	}
 }
 
-</script> 
+</script>
 <!-- End scripts -->
 
 </body>
