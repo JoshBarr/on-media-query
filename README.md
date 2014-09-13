@@ -114,6 +114,16 @@ var queries = [
 			console.log('wide-screen callback woohoo! Load some heavy desktop JS badddness.');
 			// your desktop specific logic can go here.
 		}
+	},
+	{
+		context: ['mobile', 'skinny', 'desktop'],
+		match: function(size) {
+			console.log('default fn fire for: '+size);
+			// size is the current context
+		},
+		unmatch: function(size) {
+			console.log('leaving default context for: '+size);
+		}
 	}
 ];
 // Go!
