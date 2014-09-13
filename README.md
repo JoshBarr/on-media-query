@@ -124,7 +124,7 @@ var queries = [
 		unmatch: function(size) {
 			console.log('leaving default context for: '+size);
 		}
-	},
+	}
 ];
 // Go!
 MQ.init(queries);
