@@ -147,8 +147,8 @@
             }
 
             callback_function = this.callbacks[i][key];
-            if (this._inArray(size, this.callbacks[i].context) && callback_function !== undefined) {
-                callback_function();
+            if ( ( this._inArray(size, this.callbacks[i].context) || this.callbacks[i].context == "global"  ) && callback_function !== undefined ) {
+                callback_function( size );
             }
 
         }
