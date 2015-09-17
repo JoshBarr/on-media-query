@@ -147,7 +147,7 @@
             }
 
             callback_function = this.callbacks[i][key];
-            if (this._inArray(size, this.callbacks[i].context) && callback_function !== undefined) {
+            if ( ( this._inArray(size, this.callbacks[i].context) && callback_function !== undefined ) || this.callbacks[i].context == "global" ) {
                 callback_function();
             }
 
