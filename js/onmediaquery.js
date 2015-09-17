@@ -137,12 +137,7 @@
 
         for (i = 0; i < this.callbacks.length; i++) {
 
-			callback_function = this.callbacks[i][key];
-            if (this._inArray('*', this.callbacks[i].context) && callback_function !== undefined) {
-				callback_function( size );
-            }
-
-            // Don't call for each context?
+			// Don't call for each context?
             if(this.callbacks[i].call_for_each_context === false) {
                 if ((key === 'match' && this._inArray(this.context, this.callbacks[i].context)) ||
                     (key === 'unmatch' && this._inArray(this.new_context, this.callbacks[i].context))) {
@@ -151,8 +146,9 @@
                 }
             }
 
-            if (this._inArray(size, this.callbacks[i].context) && callback_function !== undefined) {
-                callback_function();
+			callback_function = this.callbacks[i][key];
+            if ((this._inArray(size, this.callbacks[i].context) || this.callbacks[i].context[0]==='*') && callback_function !== undefined) {
+                callback_function(size);
             }
 
         }
