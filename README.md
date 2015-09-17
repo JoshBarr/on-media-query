@@ -158,6 +158,19 @@ var my_query = MQ.addQuery({
 </script>
 ```
 
+In the Hearst Hatchery fork, you can use a wildcard pattern to trigger a callback on any breakpoint event, 
+just make sure there is an argument available for the breakpoint: 
+
+```Javascrpt
+<script>
+var my_query = MQ.addQuery({
+	context: '*',
+	match: function( breakpoint ) { 
+		console.log( 'second ' + breakpoint + ' callback!' )
+	}
+});
+</script>
+```
 4. Removing queries
 -------------------------------
 Remove a query by passing in a reference to it:
