@@ -1,7 +1,15 @@
 {
   "name": "on-media-query",
   "version": "0.2.0",
-  "main": "js/onmediaquery.js",
-  "repository": "https://github.com/Hearst-Hatchery/on-media-query.git",
-  "license": "MIT"
+  "description": "A neat way to trigger JS when media queries change.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hearst-Hatchery/on-media-query.git"
+  },
+  "author": "Hearst Magazines, forked from https://github.com/JoshBarr/on-media-query",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hearst-Hatchery/on-media-query/issues"
+  },
+  "homepage": "https://github.com/Hearst-Hatchery/on-media-query#readme"
 }
