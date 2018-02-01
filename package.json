@@ -4,7 +4,7 @@
   "description": "A neat way to trigger JS when media queries change.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hearst-Hatchery/on-media-query.git"
+    "url": "git@github.com:Hearst-Hatchery/on-media-query.git"
   },
   "author": "Hearst Magazines, forked from https://github.com/JoshBarr/on-media-query",
   "license": "MIT",
